@@ -29,7 +29,7 @@ export const CheckAllIcon = styled(FaChevronDown)`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 20px;
+  left: 16px;
   font-size: 20px;
   color: ${({check}: {check: boolean}) => check ? 'var(--text-active)' : 'var(--text-completed)'};
 

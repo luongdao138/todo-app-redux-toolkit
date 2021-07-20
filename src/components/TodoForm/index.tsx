@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { add, checkAll } from "../../features/todos/todoSlice";
 import { Todo } from "../../interface";
 import { Input, Wrapper, CheckAllIcon } from "./TodoForm.styles"
@@ -9,8 +9,6 @@ const TodoForm = () => {
  const getAllTodos = (): Todo[] => localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos') as string) : [];
  const [value, setValue] = useState<string>('');
  const dispatch = useAppDispatch();
- const {list, filterMode} = useAppSelector(state => state.todos);
-
  const handleAddTodo = (e: FormEvent) => {
      e.preventDefault();
      if(!value || !value.trim().length) return;
