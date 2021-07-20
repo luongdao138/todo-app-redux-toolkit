@@ -3,21 +3,26 @@ import {Todo} from '../../interface';
 import useToggleEdit from "../../hooks/useToggleEdit";
 import { useAppDispatch } from "../../app/hooks";
 import { edit, remove, toggle } from "../../features/todos/todoSlice";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 
-const TodoItem = ({todo}: {todo: Todo}) => {
+interface Props {
+   todo:Todo;
+   temp: string;
+   setTemp:React.Dispatch<React.SetStateAction<string>>
+}
+
+const TodoItem = ({todo, temp, setTemp}: Props) => {
  const dispatch = useAppDispatch();
  const toggleTodo = (id: string): void => {
    dispatch(toggle({id}));
  };
  const { selectedTodo, openEditForm, closeEditForm } = useToggleEdit();
- const [temp, setTemp] = useState<string>(todo.desc || '');
-
+ 
  const handleEditTodo = (e: FormEvent):void => {
    e.preventDefault();
    if(!temp || !temp.length) {
       setTemp(todo.desc);
-      closeEditForm();
+      closeEditForm({id: todo.id, desc: temp});
       return;
    }
 
@@ -25,13 +30,13 @@ const TodoItem = ({todo}: {todo: Todo}) => {
       id: todo.id,
       desc: temp
    }));
-   closeEditForm();
+   closeEditForm({id: todo.id, desc: temp});
  }
 
  return (
   <Wrapper>
        <EditWrapper disappear={selectedTodo?.id !== todo.id}>
-        <Space onClick={closeEditForm}/>
+        <Space onClick={() => closeEditForm({id: todo.id, desc: temp})}/>
         <Form onSubmit={handleEditTodo}>
           <Input type='text' value={temp} onChange={e => setTemp(e.target.value)}/>
         </Form>
@@ -44,7 +49,7 @@ const TodoItem = ({todo}: {todo: Todo}) => {
            <DeleteIcon onClick={() => dispatch(remove({id: todo.id}))} />
          </>
       }
-      <Item onClick={closeEditForm} disappear={selectedTodo?.id === todo.id} onDoubleClick={() => openEditForm(todo)} completed={todo.isComplete}>{todo.desc}</Item>
+      <Item onClick={() => closeEditForm({id: todo.id, desc: temp})} disappear={selectedTodo?.id === todo.id} onDoubleClick={() => {setTemp(todo.desc); openEditForm(todo)}} completed={todo.isComplete}>{todo.desc}</Item>
   </Wrapper>
  )
 }

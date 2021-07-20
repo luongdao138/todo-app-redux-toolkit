@@ -2,10 +2,11 @@ import { useEffect, useRef } from 'react';
 import { Todo } from './../interface';
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { reset, select } from '../features/todos/selectedTodoSlice';
+import { edit } from '../features/todos/todoSlice';
 
 type HookType = {
    openEditForm: (todo: Todo) => void,
-   closeEditForm: () => void,
+   closeEditForm: ({id, desc}: {id: string, desc: string}) => void,
    selectedTodo: Todo | null
 }
 
@@ -21,9 +22,12 @@ const useToggleEdit = (): HookType => {
       ref.current = selectedTodo;
     }, [selectedTodo]);
 
-    const closeEditForm = () => { 
+    const closeEditForm = ({id, desc}: {id: string, desc: string}) => { 
         if(ref.current){
           dispatch(reset());
+          if(desc && desc.length > 0) {
+            dispatch(edit({id, desc}));
+          }
         }
     };
     

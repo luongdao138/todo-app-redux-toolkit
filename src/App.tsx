@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import TodoFooter from "./components/TodoFooter";
 import TodoForm from "./components/TodoForm";
@@ -11,10 +11,12 @@ const App = () => {
 
   const listRef = useRef<HTMLDivElement | null>(null);
   const { closeEditForm, selectedTodo } = useToggleEdit();
+  const [temp, setTemp] = useState<string>('');
 
   useEventListener('mousedown', window, (e) => {
         if(!listRef.current?.contains(e.target)) {
-          closeEditForm();
+          if(!selectedTodo) return;
+          closeEditForm({id: selectedTodo.id, desc: temp});
         }
   });
 
@@ -24,7 +26,7 @@ const App = () => {
       <Content>
         <TodoForm/>
         <div ref={listRef}>
-        <TodoList/>
+        <TodoList temp={temp} setTemp={setTemp} />
         </div>
         <TodoFooter/>
       </Content>
