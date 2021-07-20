@@ -6,7 +6,7 @@ import { Input, Wrapper, CheckAllIcon } from "./TodoForm.styles"
 
 
 const TodoForm = () => {
-  const getAllTodos = (): Todo[] => JSON.parse(localStorage.getItem('todos') as string);
+ const getAllTodos = (): Todo[] => localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos') as string) : [];
  const [value, setValue] = useState<string>('');
  const dispatch = useAppDispatch();
  const {list, filterMode} = useAppSelector(state => state.todos);

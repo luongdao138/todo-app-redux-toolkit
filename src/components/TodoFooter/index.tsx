@@ -7,7 +7,7 @@ const TodoFooter = () => {
  const dispatch = useAppDispatch();
  const {filterMode, list} = useAppSelector(state => state.todos);
  const itemLeft = useAppSelector(state => state.itemLeft);
- const getAllTodos = (): Todo[] => JSON.parse(localStorage.getItem('todos') as string);
+ const getAllTodos = (): Todo[] => localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos') as string) : [];
  const handleChangeFilterMode = (mode: string): void => {
       if(mode !== filterMode) {
           dispatch(changeMode({mode}));
