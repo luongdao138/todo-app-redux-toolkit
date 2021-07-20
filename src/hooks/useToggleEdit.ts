@@ -6,7 +6,7 @@ import { edit } from '../features/todos/todoSlice';
 
 type HookType = {
    openEditForm: (todo: Todo) => void,
-   closeEditForm: ({id, desc}: {id: string, desc: string}) => void,
+   closeEditForm: () => void,
    selectedTodo: Todo | null
 }
 
@@ -22,12 +22,9 @@ const useToggleEdit = (): HookType => {
       ref.current = selectedTodo;
     }, [selectedTodo]);
 
-    const closeEditForm = ({id, desc}: {id: string, desc: string}) => { 
+    const closeEditForm = () => { 
         if(ref.current){
           dispatch(reset());
-          if(desc && desc.length > 0) {
-            dispatch(edit({id, desc}));
-          }
         }
     };
     

@@ -16,7 +16,7 @@ const App = () => {
   useEventListener('mousedown', window, (e) => {
         if(!listRef.current?.contains(e.target)) {
           if(!selectedTodo) return;
-          closeEditForm({id: selectedTodo.id, desc: temp});
+          closeEditForm();
         }
   });
 

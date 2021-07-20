@@ -3,7 +3,8 @@ import {Todo} from '../../interface';
 import useToggleEdit from "../../hooks/useToggleEdit";
 import { useAppDispatch } from "../../app/hooks";
 import { edit, remove, toggle } from "../../features/todos/todoSlice";
-import { FormEvent } from "react";
+import React, { FormEvent } from "react";
+import { Http2ServerRequest } from "http2";
 
 interface Props {
    todo:Todo;
@@ -22,7 +23,7 @@ const TodoItem = ({todo, temp, setTemp}: Props) => {
    e.preventDefault();
    if(!temp || !temp.length) {
       setTemp(todo.desc);
-      closeEditForm({id: todo.id, desc: temp});
+      closeEditForm();
       return;
    }
 
@@ -30,15 +31,25 @@ const TodoItem = ({todo, temp, setTemp}: Props) => {
       id: todo.id,
       desc: temp
    }));
-   closeEditForm({id: todo.id, desc: temp});
+   closeEditForm();
+ };
+
+ const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
+     if(temp && temp.length)
+     dispatch(edit({
+      id: todo.id,
+      desc: temp
+     }));
  }
 
  return (
   <Wrapper>
        <EditWrapper disappear={selectedTodo?.id !== todo.id}>
-        <Space onClick={() => closeEditForm({id: todo.id, desc: temp})}/>
+        <Space onClick={() => closeEditForm()}/>
         <Form onSubmit={handleEditTodo}>
-          <Input type='text' value={temp} onChange={e => setTemp(e.target.value)}/>
+          <Input type='text' value={temp} onChange={e => setTemp(e.target.value)}
+            onBlur={handleBlur}
+          />
         </Form>
       </EditWrapper>
       {
@@ -49,7 +60,7 @@ const TodoItem = ({todo, temp, setTemp}: Props) => {
            <DeleteIcon onClick={() => dispatch(remove({id: todo.id}))} />
          </>
       }
-      <Item onClick={() => closeEditForm({id: todo.id, desc: temp})} disappear={selectedTodo?.id === todo.id} onDoubleClick={() => {setTemp(todo.desc); openEditForm(todo)}} completed={todo.isComplete}>{todo.desc}</Item>
+      <Item onClick={() => closeEditForm()} disappear={selectedTodo?.id === todo.id} onDoubleClick={() => {setTemp(todo.desc); openEditForm(todo)}} completed={todo.isComplete}>{todo.desc}</Item>
   </Wrapper>
  )
 }
